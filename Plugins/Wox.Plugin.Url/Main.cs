@@ -79,7 +79,15 @@ namespace Wox.Plugin.Url
                             }
                             try
                             {
-                                Process.Start(_settings.BrowserPath,raw);
+                                if (_settings.BrowserPath.Length == 0)
+                                {
+                                    Process.Start(raw);
+                                }
+                                else
+                                {
+                                    Process.Start(_settings.BrowserPath,raw);
+                                }
+
                                 return true;
                             }
                             catch(Exception ex)

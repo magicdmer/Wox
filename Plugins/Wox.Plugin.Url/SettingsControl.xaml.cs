@@ -12,6 +12,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Microsoft.Win32;
+
 
 namespace Wox.Plugin.Url
 {
@@ -25,11 +27,24 @@ namespace Wox.Plugin.Url
         {
             InitializeComponent();
             _settings = settings;
+            browserPathBox.Text = _settings.BrowserPath;
         }
 
         private void OnApplyBTClick(object sender, RoutedEventArgs e)
         {
             _settings.BrowserPath = browserPathBox.Text;
+        }
+
+        private void OnChooseClick(object sender, RoutedEventArgs e)
+        {
+            var fileBrowserDialog = new OpenFileDialog();
+            fileBrowserDialog.Filter = "程序文件(*.exe)|*.exe|所有文件|*.*";
+            fileBrowserDialog.CheckFileExists = true;
+            fileBrowserDialog.CheckPathExists = true;
+            if (fileBrowserDialog.ShowDialog() == true)
+            {
+                browserPathBox.Text = fileBrowserDialog.FileName;
+            }
         }
     }
 }
