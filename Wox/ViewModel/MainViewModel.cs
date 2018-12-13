@@ -644,7 +644,7 @@ namespace Wox.ViewModel
                 Results.AddResults(list, metadata.ID);
             }
 
-            if (Results.Visbility != Visibility.Visible && list.Count > 0)
+            if (Results.Visbility != Visibility.Visible && QueryText != "")
             {
                 Results.Visbility = Visibility.Visible;
             }
