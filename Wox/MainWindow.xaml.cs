@@ -277,6 +277,18 @@ namespace Wox
                 _viewModel.SelectPrevPageCommand.Execute(null);
                 e.Handled = true;
             }
+            else if (e.Key == Key.Right)
+            {
+                _viewModel.LoadContextMenuCommand.Execute(null);
+                e.Handled = true;
+            }
+            /*conflic with content left
+            else if (e.Key == Key.Left)
+            {
+                _viewModel.EscCommand.Execute(null);
+                e.Handled = true;
+            }
+            */
         }
 
         private void OnTextChanged(object sender, TextChangedEventArgs e)
