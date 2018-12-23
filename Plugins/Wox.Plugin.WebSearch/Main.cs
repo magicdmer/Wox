@@ -63,7 +63,15 @@ namespace Wox.Plugin.WebSearch
                         IcoPath = searchSource.IconPath,
                         Action = c =>
                         {
-                            Process.Start(searchSource.Url.Replace("{q}", Uri.EscapeDataString(keyword)));
+                            if (_settings.BrowserPath.Length == 0)
+                            {
+                                Process.Start(searchSource.Url.Replace("{q}", Uri.EscapeDataString(keyword)));
+                            }
+                            else
+                            {
+                                Process.Start(_settings.BrowserPath, searchSource.Url.Replace("{q}", Uri.EscapeDataString(keyword)));
+                            }
+
                             return true;
                         }
                     };
@@ -115,7 +123,15 @@ namespace Wox.Plugin.WebSearch
                     IcoPath = searchSource.IconPath,
                     Action = c =>
                     {
-                        Process.Start(searchSource.Url.Replace("{q}", Uri.EscapeDataString(o)));
+                        if (_settings.BrowserPath.Length == 0)
+                        {
+                            Process.Start(searchSource.Url.Replace("{q}", Uri.EscapeDataString(o)));
+                        }
+                        else
+                        {
+                            Process.Start(_settings.BrowserPath, searchSource.Url.Replace("{q}", Uri.EscapeDataString(o)));
+                        }
+
                         return true;
                     }
                 });
