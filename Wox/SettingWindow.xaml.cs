@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -228,6 +229,16 @@ namespace Wox
             }
         }
 
+        private string GetBrowserPath()
+        {
+            RegistryKey hRoot = Registry.ClassesRoot;
+            RegistryKey command = hRoot.OpenSubKey("http\\shell\\open\\command", false);
+            string registData = command.GetValue("").ToString();
+            Match m = Regex.Match(registData, "\"(.*?)\"");
+            string browserPath = m.Groups[1].Value;
+            return browserPath;
+        }
+
         private void OnPluginNameClick(object sender, MouseButtonEventArgs e)
         {
             if (e.ChangedButton == MouseButton.Left)
@@ -238,7 +249,15 @@ namespace Wox
                     var uri = new Uri(website);
                     if (Uri.CheckSchemeName(uri.Scheme))
                     {
-                        Process.Start(website);
+                        string browserPath = GetBrowserPath();
+                        if (browserPath.Length == 0)
+                        {
+                            Process.Start(website);
+                        }
+                        else
+                        {
+                            Process.Start(browserPath,website);
+                        }
                     }
                 }
             }
