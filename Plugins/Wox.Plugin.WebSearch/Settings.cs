@@ -7,8 +7,6 @@ namespace Wox.Plugin.WebSearch
 {
     public class Settings : BaseModel
     {
-        public string BrowserPath { get; set; }
-
         public Settings()
         {
             SelectedSuggestion = Suggestions[0];

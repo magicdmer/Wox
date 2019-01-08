@@ -1,8 +1,10 @@
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Controls;
@@ -28,6 +30,16 @@ namespace Wox.Plugin.WebSearch
             _viewModel.Save();
         }
 
+        private string GetBrowserPath()
+        {
+            RegistryKey hRoot = Registry.ClassesRoot;
+            RegistryKey command = hRoot.OpenSubKey("http\\shell\\open\\command", false);
+            string registData = command.GetValue("").ToString();
+            Match m = Regex.Match(registData, "\"(.*?)\"");
+            string browserPath = m.Groups[1].Value;
+            return browserPath;
+        }
+
         public List<Result> Query(Query query)
         {
             _updateSource?.Cancel();
@@ -37,6 +49,7 @@ namespace Wox.Plugin.WebSearch
             SearchSource searchSource =
                 _settings.SearchSources.FirstOrDefault(o => o.ActionKeyword == query.ActionKeyword && o.Enabled);
 
+            string browserPath = GetBrowserPath();
             if (searchSource != null)
             {
                 string keyword = query.Search;
@@ -48,7 +61,20 @@ namespace Wox.Plugin.WebSearch
                     {
                         Title = subtitle,
                         SubTitle = string.Empty,
-                        IcoPath = searchSource.IconPath
+                        IcoPath = searchSource.IconPath,
+                        Action = c =>
+                        {
+                            if (browserPath.Length == 0)
+                            {
+                                Process.Start(searchSource.Url);
+                            }
+                            else
+                            {
+                                Process.Start(browserPath, searchSource.Url);
+                            }
+
+                            return true;
+                        }
                     };
                     return new List<Result> {result};
                 }
@@ -63,13 +89,13 @@ namespace Wox.Plugin.WebSearch
                         IcoPath = searchSource.IconPath,
                         Action = c =>
                         {
-                            if (_settings.BrowserPath.Length == 0)
+                            if (browserPath.Length == 0)
                             {
                                 Process.Start(searchSource.Url.Replace("{q}", Uri.EscapeDataString(keyword)));
                             }
                             else
                             {
-                                Process.Start(_settings.BrowserPath, searchSource.Url.Replace("{q}", Uri.EscapeDataString(keyword)));
+                                Process.Start(browserPath, searchSource.Url.Replace("{q}", Uri.EscapeDataString(keyword)));
                             }
 
                             return true;
@@ -123,13 +149,14 @@ namespace Wox.Plugin.WebSearch
                     IcoPath = searchSource.IconPath,
                     Action = c =>
                     {
-                        if (_settings.BrowserPath.Length == 0)
+                        string browserPath = GetBrowserPath();
+                        if (browserPath.Length == 0)
                         {
                             Process.Start(searchSource.Url.Replace("{q}", Uri.EscapeDataString(o)));
                         }
                         else
                         {
-                            Process.Start(_settings.BrowserPath, searchSource.Url.Replace("{q}", Uri.EscapeDataString(o)));
+                            Process.Start(browserPath, searchSource.Url.Replace("{q}", Uri.EscapeDataString(o)));
                         }
 
                         return true;
