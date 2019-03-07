@@ -1,4 +1,6 @@
-﻿using System;
+﻿#if WINVER_10
+
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -584,3 +586,4 @@ namespace Wox.Plugin.Program.Programs
             IntPtr ppvReserved);
     }
 }
+#endif
