@@ -9,6 +9,11 @@ WoX
 
 ![demo](http://i.imgur.com/DtxNBJi.gif)
 
+Groups
+--------
+Telegram: [https://t.me/woxlaunch](https://t.me/woxlaunch)
+
+
 Features
 --------
 

@@ -204,7 +204,8 @@ namespace Wox.Plugin.Everything
                 Title = _context.API.GetTranslation("wox_plugin_everything_copy_path"),
                 Action = (context) =>
                 {
-                    Clipboard.SetText(record.FullPath);
+                    Clipboard.SetDataObject(record.FullPath);
+
                     return true;
                 },
                 IcoPath = icoPath
